@@ -1,0 +1,7 @@
+# There are a ton of bad scripts and scribbly notes and general cruft in this directory, so I'm going to do the improper thing: ignore all files and whitelist selectively
+
+/*
+!/.gitignore
+!/README.MD
+!/webpage/
+!/ML_RNN_stuff/

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./favicon.ico" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>This Chip is Out of Stock</title>
+  </head>
+  <body>
+    <div id="root" class="modalOn">
+      <div id="modal">
+        <h1>Checking part availability...</h1>
+        <div id="loading"></div>
+      </div>
+      <div id="modalFilter"></div>
+      <main id="content">
+        <h1 id="chipID"></h1>
+        <h2 id="description"></h2>
+        <figure id="render"></figure>
+        <figure id="pinout"></figure>
+      </main>
+    </div>
+    <script src="./bodges.js" type="text/javascript"></script>
+    <script src="./pinsInBlocks.js" type="text/javascript"></script>
+    <script src="./drawingSVG.js" type="text/javascript"></script>
+    <script src="./packages.js" type="text/javascript"></script>
+    <script src="./descRNN.js" type="text/javascript"></script>
+    <script src="./main.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      const drawSpecimen = (
+        package,
+        numPins,
+        thermalPads,
+        picture,
+        optionalEP = false
+      ) => {
+        // Assign labels to each chip pin
+        let pinLabels = [];
+        let thermalPadLabels = [];
+        for (let pin = 0; pin < numPins; pin++) {
+          // Identify which block of pins labels to sample from
+          pinBlock = String(pin - (pin % 8) + 8);
+          let label = sampleFromDict(pinsInBlocks[pinBlock]);
+          // Some labels have waaaay too many functions, so pick at most two
+          if (label.split("/").length > 2) {
+            let newLabel = [sample(label.split("/")), sample(label.split("/"))];
+            label = newLabel.join("/");
+          }
+          pinLabels.push(label);
+        }
+        // If none of the pins are labelled GND/Vss/VSS, name one GND
+        if (!pinLabels.includesAny("GND", "Vss", "VSS")) {
+          let GNDpin = Math.floor(Math.random() * pinLabels.length);
+          pinLabels[GNDpin] = "GND";
+        }
+        // Give the thermal pins random labels from existing pins
+        if (!optionalEP) {
+          for (let i = 0; i < thermalPads; i++) {
+            thermalPadLabels.push(sample(pinLabels));
+          }
+        }
+
+        // Publish the part specs
+        const $root = document.getElementById("root");
+        $root.className = "modalOff";
+        const $content = document.createElement("div");
+        $content.id = package;
+        $content.innerHTML = `<h2>${package}</h2>`;
+        $root.appendChild($content);
+
+        const $img = document.createElement("img");
+        $img.src = `./packages/${picture}.webp`;
+        $root.appendChild($img);
+
+        // Draw the pinout
+        const $pinout = drawPinout($root, picture, pinLabels, thermalPadLabels);
+      };
+
+      for (let package of Object.keys(packages)) {
+        // Identify how many pins and thermal pads the base package has
+        // If it has an optional pad, render both versions
+        let numPins = getPins(package);
+        let thermalPads = getEP(package);
+        let picture = getPicture(package);
+        
+        // Assign labels to pins
+        let pinLabels = [];
+        let thermalPadLabels = [];
+        for (let pin = 0; pin < numPins; pin++) {
+          // Identify which block of pins labels to sample from
+          pinBlock = String(pin - (pin % 8) + 8);
+          let label = sampleFromDict(pinsInBlocks[pinBlock]);
+          // Some labels have waaaay too many functions, so pick at most two
+          if (label.split("/").length > 2) {
+            let newLabel = [sample(label.split("/")), sample(label.split("/"))];
+            label = newLabel.join("/");
+          }
+          pinLabels.push(label);
+        }
+        // If none of the pins are labelled GND/Vss/VSS, name one GND
+        if (!pinLabels.includesAny("GND", "Vss", "VSS")) {
+          let GNDpin = Math.floor(Math.random() * pinLabels.length);
+          pinLabels[GNDpin] = "GND";
+        }
+        // Give the thermal pins random labels from existing pins
+        for (let i = 0; i < thermalPads; i++) {
+          thermalPadLabels.push(sample(pinLabels));
+        }
+        
+        // Publish part specs
+        $("root").className = "modalOff";
+        const $content = document.createElement("div");
+        $content.id = package;
+        $content.innerHTML = `<h2>${package}</h2>`;
+        $("root").appendChild($content);
+        
+        const $img = document.createElement("img");
+        $img.src = `./packages/${picture}.webp`;
+        $("root").appendChild($img);
+        drawPinout($("root"), picture, pinLabels, thermalPadLabels);
+        
+        // Repeat if part has both EP and non-EP versions
+        if (thermalPads == -1) {
+          thermalPadLabels.push(sample(pinLabels));
+          const $img2 = document.createElement("img");
+          $img2.src = `./packages/${picture}-EP.webp`;
+          $("root").appendChild($img2);
+          drawPinout($("root"), picture+"-EP", pinLabels, thermalPadLabels);
+        }
+      }
+    </script>
+  </body>
+</html>
