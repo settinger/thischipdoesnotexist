@@ -1,24 +1,35 @@
 // Main script -- assume ML5.js libraries have been loaded, the RNN for chip descriptions has been loaded, and pin names have been loaded
 
+// Take a pin's text and turn it into a number (more compact way to represent the same info, good for permalinking)
+const encodePinMap = (label, i) => {
+  let j = i - (i % 8) + 8;
+  let index = Object.keys(pinsInBlocks[j]).indexOf(label);
+  // Sometimes the index isn't in the original list! In that case we encode the text
+  return index == -1 ? label : index;
+};
+
+const decodePinMap = (i, j) => {
+  if (typeof i == "number") {
+    let k = j - (j % 8) + 8;
+    return Object.keys(pinsInBlocks[k])[i];
+  } else if (typeof i == "string") {
+    return i;
+  } else {
+    return "NC";
+  }
+};
+
 // Generate a compact representation of all the part specs so it can be permalinked
-const makePermalink = (id, package, pinLabels, thermalPadLabels) => {
-  const pinMap = pinLabels.map((label, i) => {
-    let j = i - (i % 8) + 8;
-    let index = Object.keys(pinsInBlocks[j]).indexOf(label);
-    // Sometimes the index isn't in the original list! In that case we encode the text
-    return index == -1 ? label : index;
-  });
+const makePermalink = (id, description, package, pinLabels, thermalPadLabels) => {
+  const pinMap = pinLabels.map(encodePinMap);
   const thermMap = thermalPadLabels.map((label) => pinLabels.indexOf(label));
-  console.log(JSON.stringify({ id, package, pinMap, thermMap }));
-  return JSON.stringify({ id, package, pinMap, thermMap });
+  return JSON.stringify({ id, description, package, pinMap, thermMap });
 };
 
 // Parse a permalink parameter
 const readPermalink = (permalink) => {
   try {
-    let { id, package, pinMap, thermMap } = JSON.parse(
-      LZString.decompressFromEncodedURIComponent(permalink)
-    );
+    let { id, package, pinMap, thermMap } = JSON.parse(LZString.decompressFromEncodedURIComponent(permalink));
     // Todo: call a portion of generatePage() that I need to spin off into its own method
   } catch {
     throw "Reading permalink failed.";
@@ -54,12 +65,7 @@ const randoID = () => {
   return id;
 };
 
-const generatePage = (desc) => {
-  // As soon as we have a description, start generating another, to speed up local refresh times!
-  let desc2 = getDesc(descRNN).then((newDesc) => {
-    return newDesc;
-    // Todo: do something with this
-  });
+const generatePage = (description) => {
   // Make ID for rando chip
   let id = randoID();
   // Select the package of our new rando chip
@@ -103,28 +109,113 @@ const generatePage = (desc) => {
     thermalPadLabels.push(sample(pinLabels));
   }
 
-  // Publish the part specs
-  $("root").className = "modalOff";
-  $("chipID").innerText = id;
-  $("description").innerText = `${desc}, ${package}`;
+  renderPage({ id, description, package, picture, pinLabels, thermalPadLabels });
+};
 
-  const $img = document.createElement("img");
-  $img.src = `./packages/${picture}.webp`;
-  $img.alt = `${package} rendering`;
-  $("render").appendChild($img);
-  if (package.startsWith("aQFN")) {
-    const trademark = document.createElement("figcaption");
-    trademark.innerText =
-      'Apparently "aQFN" is a registered trademark of Nordic Semiconductor.';
-    $("render").appendChild(trademark);
+// Do this when the chip description RNN model is initialized
+// If a chip is already rendered on-screen (i.e. from a permalink), generate and store a new description
+// Else, generate and render a new description AND store one
+const chipModelLoaded = async (error, model) => {
+  if (!$("root").className.includes("modalOn")) {
+    getDescription(model).then((description) => {
+      console.log("Description stowed", description);
+      model.hasDescriptionReady = model.hasDescriptionReady || description;
+      // What if *this* description is already in demand by the time it becomes ready? Recurse!
+      if ($("root").className.includes("modalOn")) {
+        chipModelLoaded("", model);
+      }
+    });
+  } else {
+    let description = await getDescription(model);
+    model.hasDescriptionReady = false;
+    console.log(description);
+    $("root").classList.remove("modalOn");
+    generatePage(description);
+    // Begin generating a new description
+    getDescription(model).then((description) => {
+      console.log(description);
+      model.hasDescriptionReady = model.hasDescriptionReady || description;
+      // What if *this* description is already in demand by the time it becomes ready? Recurse!
+      if ($("root").className.includes("modalOn")) {
+        chipModelLoaded("", model);
+      }
+    });
   }
+};
 
-  // Draw the pinout
+// Given the necessary objects, render the chip on-screen
+const renderPage = ({ id, description, package, picture, pinLabels, thermalPadLabels = [] }) => {
+  $("chipID").innerText = id;
+  $("description").innerText = description;
+  $("package").innerText = package;
+  $("render").clear();
+  $("render").appendHTML("img", { src: `./packages/${picture}.webp`, alt: `${package} rendering` });
+  if (package.startsWith("aQFN")) {
+    $("render").appendHTML("figcaption", { text: 'Apparently "aQFN" is a registered trademark of Nordic Semiconductor.' });
+  }
+  $("root").classList.remove("modalOn");
+  $("pinout").clear();
   drawPinout($("pinout"), picture, pinLabels, thermalPadLabels);
 
-  // TODO: Generate a permalink
-  const params = { id, package, pinLabels, thermalPadLabels, picture };
-  console.log(JSON.stringify(params));
+  // Generate permalink from properties
+  const pinMap = pinLabels.map(encodePinMap);
+  const thermMap = thermalPadLabels.map((label) => pinLabels.indexOf(label));
+  const URL = LZString.compressToEncodedURIComponent(JSON.stringify({ id, description, package, pinMap, thermMap }));
+  $("permalink").setAttributes({ href: "?ic=" + URL, innerText: "Permalink" });
+};
 
-  a = makePermalink(id, package, pinLabels, thermalPadLabels);
+// Intialize page by looking for a URL parameter
+// If certain properties exist, pre-assign those properties to the display
+// Only create new random values if one can't be gotten from the permalink
+const makePageFromPermalink = () => {
+  let url = new URLSearchParams(window.location.search);
+  if (!url.get("ic")) {
+    console.log("No LZString to parse");
+    const chipRNN = new ml5.charRNN("./dataASCII", chipModelLoaded);
+    $("refresh").onclick = (e) => clickRefresh(chipRNN);
+    return;
+  }
+  let permalinkData = url.get("ic");
+  let { id, package, pinMap, thermMap, description } = JSON.parse(LZString.decompressFromEncodedURIComponent(permalinkData) ?? "{}");
+  let pinLabels = pinMap.map(decodePinMap);
+  let thermalPadLabels = thermMap.map((n) => pinLabels[n] ?? "NC");
+  let picture = getPicture(package);
+
+  renderPage({ id, description, package, picture, pinLabels, thermalPadLabels });
+
+  // NOW turn on the RNN model to generate more chips
+  const chipRNN = new ml5.charRNN("./dataASCII", chipModelLoaded);
+  $("refresh").onclick = (e) => clickRefresh(chipRNN);
+};
+
+// When the "Replacement part" button is clicked, look for an existing stowed description
+// If no stowed description is found, turn on modal and wait for one to become available
+// Otherwise, display the stowed description and generate a fresh one to stow
+const clickRefresh = (model) => {
+  if (!!model.hasDescriptionReady) {
+    let description = model.hasDescriptionReady;
+    model.hasDescriptionReady = false;
+    generatePage(description);
+    // Begin generating a new description
+    getDescription(model).then((description) => {
+      model.hasDescriptionReady = model.hasDescriptionReady || description;
+      // What if *this* description is already in demand by the time it becomes ready? Recurse!
+      if ($("root").className.includes("modalOn")) {
+        chipModelLoaded("", model);
+      }
+    });
+  } else {
+    $("root").className = "modalOn";
+    // Assume a new description is forthcoming
+  }
+};
+
+const init = () => {
+  try {
+    makePageFromPermalink();
+  } catch (error) {
+    console.log(error);
+    const chipRNN = new ml5.charRNN("./dataASCII", chipModelLoaded);
+    $("refresh").onclick = (e) => clickRefresh(chipRNN);
+  }
 };

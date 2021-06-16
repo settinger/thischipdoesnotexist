@@ -17,7 +17,13 @@ const repair = (textstring) => {
 };
 
 // Use the RNN model to generate a new chip description
-const getDesc = async (model) => {
+const getDescription = async (model) => {
+  // First, check if the RNN model has prepared a chip description ahead of time
+  if (!!model.hasDescriptionReady) {
+    let description = model.hasDescriptionReady;
+    model.hasDescriptionReady = false;
+    return description;
+  }
   let finished = false;
   let textArray = [];
   let result = "Bug generator, 9√-1 V"; // If description generator fails, return this
@@ -39,17 +45,13 @@ const getDesc = async (model) => {
     }
     retries++;
   }
+  // I don't want to commit to manually retouching the RNN outputs, but gosh dang it unmatched parentheses bother me so much I'm going to address it here
+  while (result.split("(").length < result.split(")").length) {
+    result = "(" + result;
+  }
+  while (result.split("(").length > result.split(")").length) {
+    result = result + ")";
+  }
   return result;
-};
-
-// Do this when the chip description RNN model is loaded
-const descModelLoaded = async (error, model) => {
-  let desc = await getDesc(model);
-  generatePage(desc);
-  console.log(desc);
-  return desc;
-  // for (let i = 0; i < 5; i++) {
-  //   let blah = await getDesc(model);
-  //   console.log(blah);
-  // }
+  // Instead of just returning the result here, I should do more of the logic right here
 };

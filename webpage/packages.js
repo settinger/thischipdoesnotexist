@@ -90,4 +90,31 @@ const getEP = (package) => {
   }
 };
 
-const packages = {"aQFN-73":8,"CDIP-20":3,"CDIP-22":3,"CDIP-24":3,"DFN-10":33,"DFN-12":8,"DFN-14":7,"DFN-16":6,"DFN-6":32,"DFN-8":111,"DIP-14":95,"DIP-16":69,"DIP-18":9,"DIP-20":80,"DIP-22":1,"DIP-24":15,"DIP-28":59,"DIP-40":103,"DIP-8":495,"DIP-8B":17,"DIP-8C":29,"HLGA-6":1,"HQFN-16":1,"LFCSP-10":2,"LFCSP-16":11,"LFCSP-20":6,"LFCSP-24":6,"LFCSP-28":1,"LFCSP-32":7,"LFCSP-64":1,"LFCSP-72":4,"LFCSP-8":11,"LGA-12":3,"LGA-14":2,"LGA-16":6,"LGA-28":1,"LGA-8":7,"LQFP-32":74,"LQFP-44":19,"LQFP-48":149,"LQFP-64":266,"LQFP-80":10,"MLPQ-48":2,"MQFP-44":1,"MQFP-52":1,"MSOP-10":35,"MSOP-12":10,"MSOP-16":12,"MSOP-8":178,"PLCC-20":10,"PLCC-28":5,"PLCC-44":9,"PLCC-52":1,"PLCC-68":2,"QFN-12":6,"QFN-16":103,"QFN-20":69,"QFN-24":76,"QFN-28":50,"QFN-32":155,"QFN-36":2,"QFN-40":19,"QFN-44":47,"QFN-48":85,"QFN-56":5,"QFN-64":113,"QFN-8":3,"QSOP-16":18,"QSOP-24":8,"SIP-15":7,"SIP-8":40,"SIP-9":9,"TO-71":4,"SOIC-14":122,"SOIC-16":210,"SOIC-18":5,"SOIC-20":87,"SOIC-24":21,"SOIC-28":43,"HSOP-36":2,"SOIC-8":977,"SOP-16":9,"SOP-24":1,"SOP-32":1,"SOP-8":29,"SPMCC-027":15,"SSOP-10":5,"SSOP-14":11,"SSOP-16":32,"SSOP-20":36,"SSOP-24":22,"SSOP-28":33,"SSOP-8":27,"TDFN-10":3,"TDFN-14":2,"TDFN-8":6,"TQFN-16":6,"TQFN-20":2,"TQFN-24":1,"TQFN-48":1,"TQFP-32":57,"TQFP-44":60,"TQFP-48":22,"TQFP-52":2,"TQFP-64":91,"TQFP-80":1,"TSSOP-10":4,"TSSOP-14":75,"TSSOP-16":78,"TSSOP-20":119,"TSSOP-24":38,"TSSOP-28":53,"TSSOP-38":16,"TSSOP-8":114,"UDFN-8":6,"UFQFPN-20":3,"UFQFPN-28":14,"UFQFPN-32":42,"UFQFPN-48":59,"UQFN-16":4,"UQFN-20":2,"UQFN-28":4,"UQFN-40":2,"UQFN-48":2,"UQFN-64":2,"VDFN-14":1,"VFQFPN-36":8,"VQFN-16":6,"VQFN-20":13,"VQFN-24":16,"VQFN-28":1,"VQFN-32":5,"VQFN-40":2,"VQFN-48":1,"VQFN-64":3,"VSON-10":12,"VSON-12":1,"VSON-8":1,"VSSOP-24":21,"VSSOP-10":16,"VSSOP-8":50,"WDFN-8":7,"WQFN-16":7,"WQFN-20":4,"WQFN-24":3,"WQFN-32":3,"WSON-10":4,"WSON-12":3,"WSON-8":43,"X2QFN-12":4,"X2SON-8":2};
+// Given a number of pins, generate the appropriate pin labels
+const makePins = (package) => {
+  let numPins = getPins(package);
+  let numThermalPads = Math.max(getEP(package), 0);
+  let pinLabels = [];
+  let thermalPadLabels = [];
+  for (let pin = 0; pin < numPins; pin++) {
+    // Identify which block of pins labels to sample from
+    pinBlock = String(pin - (pin % 8) + 8);
+    let label = sampleFromDict(pinsInBlocks[pinBlock]);
+    // Some labels have waaaay too many functions, so pick at most two
+    if (label.split("/").length > 2) {
+      let newLabel = [sample(label.split("/")), sample(label.split("/"))];
+      label = newLabel.join("/");
+    }
+    pinLabels.push(label);
+  }
+  // If none of the pins are labelled GND/Vss/VSS, name one GND
+  if (!pinLabels.includesAny("GND", "Vss", "VSS")) {
+    let GNDpin = Math.floor(Math.random() * pinLabels.length);
+    pinLabels[GNDpin] = "GND";
+  }
+  // Give the thermal pins random labels from existing pins
+  for (let i = 0; i < numThermalPads; i++) {
+    thermalPadLabels.push(sample(pinLabels));
+  }
+  return [pinLabels, thermalPadLabels];
+};

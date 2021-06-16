@@ -46,10 +46,10 @@
   opacity: 50%;
 }
 
-.modalOff #modalFilter {
+:not(.modalOn) > #modalFilter {
   display: none;
 }
-.modalOff #modal {
+:not(.modalOn) > #modal {
   display: none;
 }
 
@@ -57,6 +57,7 @@
   display: none;
 }
 
-img {
+img,
+svg {
   max-width: 90%;
 }

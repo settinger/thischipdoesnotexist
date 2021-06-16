@@ -127,9 +127,7 @@ const drawPin = (svg, pin) => {
   else if (pin.style == "SIP") {
     g.appendSVG("path", {
       ...lines,
-      d: `M ${
-        x - 10
-      } ${y} v 40 l 7 7 v 30 a 3 3 180 1 0 6 0 v -30 l 7 -7 v -40`,
+      d: `M ${x - 10} ${y} v 40 l 7 7 v 30 a 3 3 180 1 0 6 0 v -30 l 7 -7 v -40`,
     });
     g.appendSVG("text", {
       ...txt,
@@ -150,9 +148,7 @@ const drawPin = (svg, pin) => {
       height: 15,
     });
     let textAnchor = pin.direction.any("left", "up") ? "end" : "start";
-    let transform = pin.direction.any("up", "down")
-      ? { transform: `rotate(90,${tx},${ty})` }
-      : {};
+    let transform = pin.direction.any("up", "down") ? { transform: `rotate(90,${tx},${ty})` } : {};
     g.appendSVG("text", {
       ...txt,
       ...transform,
@@ -223,9 +219,7 @@ const drawSOIC = ({ svg, package, pins, thermalPads }) => {
       label: thermalPads[0],
       pinAnchor: [0, 0],
       textAnchor: [0, 0],
-      padSize: isDFN
-        ? [0.5 * packageWidth, 0.66 * packageHeight]
-        : [0.66 * packageWidth, 0.66 * packageHeight],
+      padSize: isDFN ? [0.5 * packageWidth, 0.66 * packageHeight] : [0.66 * packageWidth, 0.66 * packageHeight],
     });
   }
 
@@ -311,9 +305,7 @@ const drawQFP = ({ svg, package, pins, thermalPads }) => {
       label: thermalPads[0],
       pinAnchor: [0, 0],
       textAnchor: [0, 0],
-      padSize: isQFN
-        ? [packageWidth - 50, packageHeight - 50]
-        : [0.66 * packageWidth, 0.66 * packageHeight],
+      padSize: isQFN ? [packageWidth - 50, packageHeight - 50] : [0.66 * packageWidth, 0.66 * packageHeight],
     });
   }
 
@@ -469,10 +461,7 @@ const drawLFCSP = ({ svg, pins }) => {
     };
   }
   i--;
-  while (
-    ++i <
-    pinsPerSide[0] + pinsPerSide[1] + pinsPerSide[2] + pinsPerSide[3]
-  ) {
+  while (++i < pinsPerSide[0] + pinsPerSide[1] + pinsPerSide[2] + pinsPerSide[3]) {
     let j = i - (pinsPerSide[0] + pinsPerSide[1] + pinsPerSide[2]);
     let x = (pinsPerSide[1] / 2 - j - 0.5) * pinPitch;
     let y = -packageHeight / 2;
@@ -589,10 +578,7 @@ const drawLGA = ({ svg, pins }) => {
     };
   }
   i--;
-  while (
-    ++i <
-    pinsPerSide[0] + pinsPerSide[1] + pinsPerSide[2] + pinsPerSide[3]
-  ) {
+  while (++i < pinsPerSide[0] + pinsPerSide[1] + pinsPerSide[2] + pinsPerSide[3]) {
     let j = i % (pinsPerSide[0] + pinsPerSide[1] + pinsPerSide[2]);
     let x = packageWidth / 2 - (3 * pinPitch) / 2 - j * pinPitch;
     let y = -packageHeight / 2 + pinPitch / 2;
@@ -760,81 +746,7 @@ const drawAQFN73 = ({ svg, pins, thermalPads }) => {
   let packageHeight = 28 * pinPitch;
   let r = 8;
   const rowNames = [..."ABCDEFGHJKLMNPRTUVWY", "AA", "AB", "AC", "AD"];
-  const coords = [
-    [0, 7],
-    [0, 9],
-    [0, 11],
-    [0, 13],
-    [0, 15],
-    [0, 17],
-    [0, 19],
-    [0, 21],
-    [0, 22],
-    [1, 0],
-    [1, 2],
-    [1, 4],
-    [1, 6],
-    [1, 8],
-    [1, 10],
-    [1, 12],
-    [1, 14],
-    [1, 16],
-    [1, 18],
-    [1, 23],
-    [2, 0],
-    [3, 1],
-    [3, 22],
-    [4, 23],
-    [5, 1],
-    [5, 22],
-    [6, 0],
-    [7, 1],
-    [7, 22],
-    [8, 0],
-    [8, 23],
-    [9, 1],
-    [10, 0],
-    [10, 23],
-    [11, 1],
-    [12, 0],
-    [12, 23],
-    [13, 1],
-    [13, 22],
-    [14, 0],
-    [14, 23],
-    [15, 1],
-    [15, 22],
-    [16, 0],
-    [16, 23],
-    [17, 22],
-    [18, 0],
-    [18, 23],
-    [19, 1],
-    [19, 22],
-    [20, 23],
-    [21, 1],
-    [22, 4],
-    [22, 8],
-    [22, 10],
-    [22, 12],
-    [22, 14],
-    [22, 16],
-    [22, 18],
-    [22, 20],
-    [22, 23],
-    [23, 1],
-    [23, 3],
-    [23, 5],
-    [23, 7],
-    [23, 9],
-    [23, 11],
-    [23, 13],
-    [23, 15],
-    [23, 17],
-    [23, 19],
-    [23, 21],
-    [23, 22],
-  ];
+  const coords = "a";
   svg.appendSVG("rect", {
     ...lines,
     x: -packageWidth / 2,
@@ -850,25 +762,11 @@ const drawAQFN73 = ({ svg, pins, thermalPads }) => {
     stroke: "black",
   });
   pins.forEach((pin, i) => {
-    let [row, col] = coords[i];
+    let [row, col] = aQFN73[i];
     let cx = -packageWidth / 2 + 2 * pinPitch + pinPitch * col;
-    cx +=
-      col == 0
-        ? -pinPitch
-        : col == 22
-        ? pinPitch
-        : col == 23
-        ? 2 * pinPitch
-        : 0;
+    cx += col == 0 ? -pinPitch : col == 22 ? pinPitch : col == 23 ? 2 * pinPitch : 0;
     let cy = -packageHeight / 2 + 3 * pinPitch + pinPitch * row;
-    cy +=
-      row == 0
-        ? -2 * pinPitch
-        : row == 1
-        ? -pinPitch
-        : row == 23
-        ? pinPitch
-        : 0;
+    cy += row == 0 ? -2 * pinPitch : row == 1 ? -pinPitch : row == 23 ? pinPitch : 0;
     svg.appendSVG("circle", { ...lines, cx, cy, r });
     let label, textAnchor, direction;
     if (col < 2) {
@@ -1190,15 +1088,11 @@ const drawSPMCC = ({ svg, pins }) => {
   // Draw body
   svg.appendSVG("path", {
     ...lines,
-    d: `M ${packageWidth / 2} ${
+    d: `M ${packageWidth / 2} ${-packageHeight / 2} v ${packageHeight} H 10 v -10 a 10 10 180 0 0 -20 0 v 10 H ${-packageWidth / 2 - 20} V ${
+      8 * leftPinPitch
+    } h 20 v ${-2 * leftPinPitch} h -20 v ${-2 * leftPinPitch} h 20 v ${-2 * leftPinPitch} h -20 v ${-2 * leftPinPitch} h 20 v ${-2 * leftPinPitch} h -20 V ${
       -packageHeight / 2
-    } v ${packageHeight} H 10 v -10 a 10 10 180 0 0 -20 0 v 10 H ${
-      -packageWidth / 2 - 20
-    } V ${8 * leftPinPitch} h 20 v ${-2 * leftPinPitch} h -20 v ${
-      -2 * leftPinPitch
-    } h 20 v ${-2 * leftPinPitch} h -20 v ${-2 * leftPinPitch} h 20 v ${
-      -2 * leftPinPitch
-    } h -20 V ${-packageHeight / 2} H -10 v 10 a 10 10 180 0 0 20 0 v -10 z`,
+    } H -10 v 10 a 10 10 180 0 0 20 0 v -10 z`,
   });
 };
 
@@ -1206,11 +1100,10 @@ const drawSPMCC = ({ svg, pins }) => {
 const resize = (svg) => {
   let { x, y, width, height } = svg.getBBox();
   let biggestSide = Math.max(Math.abs(x), Math.abs(y), width + x, height + y);
-  if (biggestSide > 250) {
+  //if (biggestSide > 250) {
+  if (true) {
     svg.setAttributes({
-      viewBox: `${-biggestSide - 10} ${-biggestSide - 10} ${
-        2 * biggestSide + 20
-      } ${2 * biggestSide + 20}`,
+      viewBox: `${-biggestSide - 10} ${-biggestSide - 10} ${2 * biggestSide + 20} ${2 * biggestSide + 20}`,
     });
   }
 };
@@ -1226,23 +1119,13 @@ const drawPinout = (root, package, pins, thermalPads) => {
   svg.style.maxWidth = "90%";
   root.appendChild(svg);
 
-  // calculate the size (relative to viewbox) of a single character on this particular display
-  const tempText = svg.appendSVG("text", { ...txt, text: "_", x: 0, y: 0 });
-  let { width, height } = tempText.getBBox();
-  svg.glyphWidth = width;
-  svg.glyphHeight = height;
-  tempText.remove();
-
   let args = { svg, package, pins, thermalPads };
 
   if (package.startsWithAny("SOIC", "SSOP", "DFN") || package.includes("DIP")) {
     drawSOIC(args);
   } else if (package.startsWith("SIP")) {
     drawSIP(args);
-  } else if (
-    package.includes("QFP-") ||
-    package.startsWithAny("PLCC", "QFN", "HQFN")
-  ) {
+  } else if (package.includes("QFP-") || package.startsWithAny("PLCC", "QFN", "HQFN")) {
     drawQFP(args);
   } else if (package.startsWith("SIP")) {
     drawSIP(args);
