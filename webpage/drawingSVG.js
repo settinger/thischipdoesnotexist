@@ -1115,6 +1115,7 @@ const drawPinout = (root, package, pins, thermalPads) => {
     width: "500px",
     height: "500px",
     style: "font: 16px monospace; dominant-baseline: central; white-space: pre",
+    class: "svg",
   });
   svg.style.maxWidth = "90%";
   root.appendChild(svg);

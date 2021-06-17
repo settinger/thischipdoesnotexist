@@ -118,7 +118,7 @@ const generatePage = (description) => {
 const chipModelLoaded = async (error, model) => {
   if (!$("root").className.includes("modalOn")) {
     getDescription(model).then((description) => {
-      console.log("Description stowed", description);
+      console.log(description);
       model.hasDescriptionReady = model.hasDescriptionReady || description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
       if ($("root").className.includes("modalOn")) {
@@ -157,6 +157,9 @@ const renderPage = ({ id, description, package, picture, pinLabels, thermalPadLa
   $("pinout").clear();
   drawPinout($("pinout"), picture, pinLabels, thermalPadLabels);
 
+  // Set the estimated lead time (there's no way to permalink a lead time, too lazy to add it to the LZString)
+  $("longWait").innerText = (Math.random() * 80 + 50).toFixed(Math.floor(Math.random() * 3)) + " weeks";
+
   // Generate permalink from properties
   const pinMap = pinLabels.map(encodePinMap);
   const thermMap = thermalPadLabels.map((label) => pinLabels.indexOf(label));
@@ -170,10 +173,7 @@ const renderPage = ({ id, description, package, picture, pinLabels, thermalPadLa
 const makePageFromPermalink = () => {
   let url = new URLSearchParams(window.location.search);
   if (!url.get("ic")) {
-    console.log("No LZString to parse");
-    const chipRNN = new ml5.charRNN("./dataASCII", chipModelLoaded);
-    $("refresh").onclick = (e) => clickRefresh(chipRNN);
-    return;
+    throw "No LZString to parse";
   }
   let permalinkData = url.get("ic");
   let { id, package, pinMap, thermMap, description } = JSON.parse(LZString.decompressFromEncodedURIComponent(permalinkData) ?? "{}");
@@ -182,16 +182,17 @@ const makePageFromPermalink = () => {
   let picture = getPicture(package);
 
   renderPage({ id, description, package, picture, pinLabels, thermalPadLabels });
-
-  // NOW turn on the RNN model to generate more chips
-  const chipRNN = new ml5.charRNN("./dataASCII", chipModelLoaded);
-  $("refresh").onclick = (e) => clickRefresh(chipRNN);
 };
 
 // When the "Replacement part" button is clicked, look for an existing stowed description
 // If no stowed description is found, turn on modal and wait for one to become available
 // Otherwise, display the stowed description and generate a fresh one to stow
-const clickRefresh = (model) => {
+// Before displaying the stowed one, show the loading page for a fraction of a second, for """authenticity"""
+const clickRefresh = async (model) => {
+  $("root").classList.add("modalOn");
+  // Delay so it feels like a new page is actually loading
+  await new Promise((x) => setTimeout(x, 500));
+
   if (!!model.hasDescriptionReady) {
     let description = model.hasDescriptionReady;
     model.hasDescriptionReady = false;
@@ -215,7 +216,7 @@ const init = () => {
     makePageFromPermalink();
   } catch (error) {
     console.log(error);
-    const chipRNN = new ml5.charRNN("./dataASCII", chipModelLoaded);
-    $("refresh").onclick = (e) => clickRefresh(chipRNN);
   }
+  const chipRNN = new ml5.charRNN("./dataASCII", chipModelLoaded);
+  $("refresh").onclick = (e) => clickRefresh(chipRNN);
 };

@@ -1,4 +1,4 @@
-const data = { seed: "\n", temperature: 0.8, length: 300 };
+const data = { seed: "\n", temperature: 0.99, length: 300 };
 
 // Take a section of text from the generator and fix the encoding
 // Take out carriage returns, replace Ø => Ω, Ç => Σ, Æ => Δ, Þ => Ć, ú => μ, ¥ => √
