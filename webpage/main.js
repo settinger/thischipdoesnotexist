@@ -68,6 +68,9 @@ const randoID = () => {
 const generatePage = (description) => {
   // Make ID for rando chip
   let id = randoID();
+  // Make vendor name for rando chip
+  let vendor = useMarkov(markov);
+
   // Select the package of our new rando chip
   let package = sampleFromDict(packages);
 
@@ -109,17 +112,18 @@ const generatePage = (description) => {
     thermalPadLabels.push(sample(pinLabels));
   }
 
-  renderPage({ id, description, package, picture, pinLabels, thermalPadLabels });
+  renderPage({ id, vendor, description, package, picture, pinLabels, thermalPadLabels });
 };
 
 // Do this when the chip description RNN model is initialized
 // If a chip is already rendered on-screen (i.e. from a permalink), generate and store a new description
 // Else, generate and render a new description AND store one
 const chipModelLoaded = async (error, model) => {
+  $("refresh").onclick ??= (_) => clickRefresh(model);
   if (!$("root").className.includes("modalOn")) {
     getDescription(model).then((description) => {
       console.log(description);
-      model.hasDescriptionReady = model.hasDescriptionReady || description;
+      model.hasDescriptionReady ||= description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
       if ($("root").className.includes("modalOn")) {
         chipModelLoaded("", model);
@@ -134,7 +138,7 @@ const chipModelLoaded = async (error, model) => {
     // Begin generating a new description
     getDescription(model).then((description) => {
       console.log(description);
-      model.hasDescriptionReady = model.hasDescriptionReady || description;
+      model.hasDescriptionReady ||= description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
       if ($("root").className.includes("modalOn")) {
         chipModelLoaded("", model);
@@ -144,8 +148,9 @@ const chipModelLoaded = async (error, model) => {
 };
 
 // Given the necessary objects, render the chip on-screen
-const renderPage = ({ id, description, package, picture, pinLabels, thermalPadLabels = [] }) => {
+const renderPage = ({ id, vendor, description, package, picture, pinLabels, thermalPadLabels = [] }) => {
   $("chipID").innerText = id;
+  $("vendor").innerText = vendor;
   $("description").innerText = description;
   $("package").innerText = package;
   $("render").clear();
@@ -157,13 +162,20 @@ const renderPage = ({ id, description, package, picture, pinLabels, thermalPadLa
   $("pinout").clear();
   drawPinout($("pinout"), picture, pinLabels, thermalPadLabels);
 
+  // Create bounce effect
+  $("banner").classList.remove("bounceIn");
+  $("banner").classList.add("bounceIn");
+  window.setTimeout(() => {
+    $("banner").classList.remove("bounceIn");
+  }, 4000);
+
   // Set the estimated lead time (there's no way to permalink a lead time, too lazy to add it to the LZString)
   $("longWait").innerText = (Math.random() * 80 + 50).toFixed(Math.floor(Math.random() * 3)) + " weeks";
 
   // Generate permalink from properties
   const pinMap = pinLabels.map(encodePinMap);
   const thermMap = thermalPadLabels.map((label) => pinLabels.indexOf(label));
-  const URL = LZString.compressToEncodedURIComponent(JSON.stringify({ id, description, package, pinMap, thermMap }));
+  const URL = LZString.compressToEncodedURIComponent(JSON.stringify({ id, vendor, description, package, pinMap, thermMap }));
   $("permalink").setAttributes({ href: "?ic=" + URL, innerText: "Permalink" });
 };
 
@@ -176,12 +188,11 @@ const makePageFromPermalink = () => {
     throw "No LZString to parse";
   }
   let permalinkData = url.get("ic");
-  let { id, package, pinMap, thermMap, description } = JSON.parse(LZString.decompressFromEncodedURIComponent(permalinkData) ?? "{}");
+  let { id, vendor, package, pinMap, thermMap, description } = JSON.parse(LZString.decompressFromEncodedURIComponent(permalinkData) ?? "{}");
   let pinLabels = pinMap.map(decodePinMap);
   let thermalPadLabels = thermMap.map((n) => pinLabels[n] ?? "NC");
   let picture = getPicture(package);
-
-  renderPage({ id, description, package, picture, pinLabels, thermalPadLabels });
+  renderPage({ id, vendor, description, package, picture, pinLabels, thermalPadLabels });
 };
 
 // When the "Replacement part" button is clicked, look for an existing stowed description
@@ -217,6 +228,5 @@ const init = () => {
   } catch (error) {
     console.log(error);
   }
-  const chipRNN = new ml5.charRNN("./dataASCII", chipModelLoaded);
-  $("refresh").onclick = (e) => clickRefresh(chipRNN);
+  const chipPromise = new ml5.charRNN("./dataASCII", chipModelLoaded);
 };

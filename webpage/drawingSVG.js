@@ -20,16 +20,15 @@ const drawText = (svg, pin, extraProps = {}) => {
   let width = measure.getBBox().width;
   measure.remove();
   if (pin.style == "EP") {
-    //x -= (plaintext.length / 2) * gw;
     x -= width / 2;
   } else if (pin.direction?.any("left", "up")) {
-    //x -= plaintext.length * gw;
     x -= width;
   }
   const g = svg.appendSVG("text", extraProps);
 
   let splits = pin.label.split("~");
   let currX = x;
+  console.log(splits);
   splits.forEach((split, i) => {
     let span = g.appendSVG("tspan", {
       ...txt,
@@ -39,7 +38,6 @@ const drawText = (svg, pin, extraProps = {}) => {
       "text-decoration": i % 2 ? "overline" : "none",
     });
     currX += span.getBBox().width;
-    //currX += split.length * gw;
   });
 
   // If text is rotated, rotate now
@@ -1097,13 +1095,16 @@ const drawSPMCC = ({ svg, pins }) => {
 };
 
 // Add a resize function to use when diagram is attached to document
-const resize = (svg) => {
+const resize = (svg, padding = 10, centered = false) => {
   let { x, y, width, height } = svg.getBBox();
-  let biggestSide = Math.max(Math.abs(x), Math.abs(y), width + x, height + y);
-  //if (biggestSide > 250) {
-  if (true) {
+  if (centered) {
+    let biggestSide = Math.max(Math.abs(x), Math.abs(y), width + x, height + y);
     svg.setAttributes({
-      viewBox: `${-biggestSide - 10} ${-biggestSide - 10} ${2 * biggestSide + 20} ${2 * biggestSide + 20}`,
+      viewBox: `${biggestSide - padding} ${biggestSide - padding} ${2 * (biggestSide + padding)} ${2 * (biggestSide + padding)}`,
+    });
+  } else {
+    svg.setAttributes({
+      viewBox: `${x - padding} ${y - padding} ${width + 2 * padding} ${height + 2 * padding}`,
     });
   }
 };

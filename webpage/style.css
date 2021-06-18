@@ -1,6 +1,52 @@
+/* Google Fonts: Open Sans for body text, Oswald for chip ID/description, Capriola for logo */
+@import url("https://fonts.googleapis.com/css2?family=Capriola&family=Open+Sans&family=Oswald:wght@700&display=swap");
+
+/* color scheme reference: https://coolors.co/006d77-83c5be-edf6f9-ffddd2-e29578 */
 * {
   margin: 0;
   box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+
+body {
+  background-color: #edf6f9;
+}
+
+.svg * {
+  font-family: monospace;
+}
+
+header {
+  width: 100%;
+  min-height: 5em;
+  color: #edf6f9;
+  background-color: #006d77;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#logo {
+  font-family: "Capriola", sans-serif;
+  padding: 1rem;
+  font-size: 2em;
+  vertical-align: middle;
+
+  overflow: hidden;
+}
+
+#fakenav {
+  display: flex;
+  justify-content: space-around;
+  margin: auto 0 auto auto;
+}
+#fakenav div {
+  padding: 2.1em 1em;
+  vertical-align: middle;
+}
+#fakenav div:hover {
+  background-color: #ffffff44;
 }
 
 #modal {
@@ -62,7 +108,64 @@
   display: none;
 }
 
-img,
+#chipStats {
+  margin: auto;
+  max-width: 800px;
+}
+
+.figures {
+  margin: auto;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  border: 1px solid #222;
+  background-color: white;
+}
+
+figure {
+  flex-shrink: 1;
+  width: 45%;
+  min-width: 200px;
+  margin: auto;
+  aspect-ratio: 1/1;
+}
+figure img,
 svg {
-  max-width: 90%;
+  height: 100%;
+  background-color: white;
+}
+
+#content {
+  padding: 2em;
+}
+
+#banner {
+  width: 80%;
+  max-width: 30em;
+  margin: 2rem auto 1.5rem auto;
+  padding: 20px;
+  background-color: #f27d60;
+  color: hsla(200, 0%, 0%, 0.7); /* as calculated by https://contrast-ratio.com */
+  border-radius: 1rem;
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: "Capriola";
+  box-shadow: #32325daa 0px 13px 27px -5px, #000000aa 0px 8px 16px -8px;
+}
+.bounceIn {
+  position: relative;
+  left: -100vw;
+  transition: transform 1s cubic-bezier(0.47, 2.33, 0.15, 0.24);
+  transform: translateX(100vw);
+}
+
+#leadTime {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+#longWait {
+  color: red;
+  font-weight: bold;
 }

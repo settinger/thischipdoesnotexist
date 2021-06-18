@@ -13,9 +13,24 @@ try {
       return this.map((v, i) => v * (multiplicand[i] ?? 1));
     },
   });
-  Object.defineProperty(Object.prototype, "any", {
+  Object.defineProperty(Array.prototype, "any", {
     value: function () {
       return Object.values(arguments).some((arg) => arg == this);
+    },
+  });
+  Object.defineProperty(Array.prototype, "includesAny", {
+    value: function () {
+      return Object.values(arguments).some((arg) => this.includes(arg));
+    },
+  });
+  Object.defineProperty(String.prototype, "any", {
+    value: function () {
+      return Object.values(arguments).some((arg) => arg == this);
+    },
+  });
+  Object.defineProperty(String.prototype, "includesAny", {
+    value: function () {
+      return Object.values(arguments).some((arg) => this.includes(arg));
     },
   });
   Object.defineProperty(String.prototype, "startsWithAny", {
@@ -23,9 +38,9 @@ try {
       return Object.values(arguments).some((arg) => this.startsWith(arg));
     },
   });
-  Object.defineProperty(Object.prototype, "includesAny", {
+  Object.defineProperty(String.prototype, "endsWithAny", {
     value: function () {
-      return Object.values(arguments).some((arg) => this.includes(arg));
+      return Object.values(arguments).some((arg) => this.endsWith(arg));
     },
   });
   Object.defineProperty(Element.prototype, "setAttributes", {
@@ -99,4 +114,40 @@ const sampleFromDict = (dict) => {
     }
   }
   return sample(array);
+};
+
+// Read compressed data (or whatever) from an external text file
+async function readText(url) {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("HTTP error " + response.status); // Rejects the promise
+  }
+  const blah = await response.text();
+  return blah;
+}
+
+// Use Proxy to implement defaultDict from python
+const defaultDict2 = (value = 0) => {
+  return new Proxy(
+    {},
+    {
+      get: (target, prop, receiver) => {
+        target[prop] ??= () => value;
+        return target[prop];
+      },
+    }
+  );
+};
+
+// Use Proxy to implement defaultDict from python
+const defaultDict = (lambda = () => 0) => {
+  return new Proxy(
+    {},
+    {
+      get: (target, prop, receiver) => {
+        target[prop] ??= lambda();
+        return target[prop];
+      },
+    }
+  );
 };
