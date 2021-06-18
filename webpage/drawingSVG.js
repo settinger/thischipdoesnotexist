@@ -28,7 +28,6 @@ const drawText = (svg, pin, extraProps = {}) => {
 
   let splits = pin.label.split("~");
   let currX = x;
-  console.log(splits);
   splits.forEach((split, i) => {
     let span = g.appendSVG("tspan", {
       ...txt,

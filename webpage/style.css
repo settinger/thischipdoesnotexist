@@ -169,3 +169,16 @@ svg {
   color: red;
   font-weight: bold;
 }
+
+#lowerLinks {
+  padding-top: 2em;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.fakeLink {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}

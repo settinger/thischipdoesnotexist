@@ -46,7 +46,7 @@ try {
   Object.defineProperty(Element.prototype, "setAttributes", {
     value: function (attributes = {}) {
       for (let [key, value] of Object.entries(attributes)) {
-        if (this.nodeName.any("text", "tspan", "textpath") && key.any("text", "textContent", "innerText", "innerHTML")) {
+        if (key.any("text", "textContent", "innerText", "innerHTML")) {
           if (SVGElement.prototype.isPrototypeOf(this)) {
             this.textContent = value;
           } else {
@@ -125,19 +125,6 @@ async function readText(url) {
   const blah = await response.text();
   return blah;
 }
-
-// Use Proxy to implement defaultDict from python
-const defaultDict2 = (value = 0) => {
-  return new Proxy(
-    {},
-    {
-      get: (target, prop, receiver) => {
-        target[prop] ??= () => value;
-        return target[prop];
-      },
-    }
-  );
-};
 
 // Use Proxy to implement defaultDict from python
 const defaultDict = (lambda = () => 0) => {

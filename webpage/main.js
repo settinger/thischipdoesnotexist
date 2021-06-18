@@ -26,16 +26,6 @@ const makePermalink = (id, description, package, pinLabels, thermalPadLabels) =>
   return JSON.stringify({ id, description, package, pinMap, thermMap });
 };
 
-// Parse a permalink parameter
-const readPermalink = (permalink) => {
-  try {
-    let { id, package, pinMap, thermMap } = JSON.parse(LZString.decompressFromEncodedURIComponent(permalink));
-    // Todo: call a portion of generatePage() that I need to spin off into its own method
-  } catch {
-    throw "Reading permalink failed.";
-  }
-};
-
 // Generate a random ID, e.g. "TBN3329x"
 // Put 2-4 letters at the front
 // Append 3-5 numbers
@@ -201,15 +191,17 @@ const makePageFromPermalink = () => {
 // Before displaying the stowed one, show the loading page for a fraction of a second, for """authenticity"""
 const clickRefresh = async (model) => {
   $("root").classList.add("modalOn");
-  // Delay so it feels like a new page is actually loading
-  await new Promise((x) => setTimeout(x, 500));
-
+  $("banner").classList.remove("bounceIn");
   if (!!model.hasDescriptionReady) {
+    // Delay so it feels like a new page is actually loading
+    await new Promise((x) => setTimeout(x, 500));
+
     let description = model.hasDescriptionReady;
     model.hasDescriptionReady = false;
     generatePage(description);
     // Begin generating a new description
     getDescription(model).then((description) => {
+      console.log(description);
       model.hasDescriptionReady = model.hasDescriptionReady || description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
       if ($("root").className.includes("modalOn")) {
