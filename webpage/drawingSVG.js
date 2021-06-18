@@ -24,19 +24,15 @@ const drawText = (svg, pin, extraProps = {}) => {
   } else if (pin.direction?.any("left", "up")) {
     x -= width;
   }
-  const g = svg.appendSVG("text", extraProps);
+  const g = svg.appendSVG("text", { ...extraProps, x, y });
 
   let splits = pin.label.split("~");
-  let currX = x;
   splits.forEach((split, i) => {
-    let span = g.appendSVG("tspan", {
+    g.appendSVG("tspan", {
       ...txt,
-      x: currX,
-      y,
       text: split,
       "text-decoration": i % 2 ? "overline" : "none",
     });
-    currX += span.getBBox().width;
   });
 
   // If text is rotated, rotate now
