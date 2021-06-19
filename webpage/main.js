@@ -55,9 +55,9 @@ const randoID = () => {
   return id;
 };
 
-const generatePage = (description) => {
+const generatePage = (description, stowedID) => {
   // Make ID for rando chip
-  let id = randoID();
+  let id = stowedID || randoID();
   // Make vendor name for rando chip
   let vendor = useMarkov(markov);
 
@@ -113,6 +113,9 @@ const chipModelLoaded = async (error, model) => {
   if (!$("root").className.includes("modalOn")) {
     getDescription(model).then((description) => {
       console.log(description);
+      model.stowedID = randoID();
+      $("refresh").innerText = `Recommended substitute part: ${model.stowedID}`;
+      blink();
       model.hasDescriptionReady ||= description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
       if ($("root").className.includes("modalOn")) {
@@ -124,10 +127,13 @@ const chipModelLoaded = async (error, model) => {
     model.hasDescriptionReady = false;
     console.log(description);
     $("root").classList.remove("modalOn");
-    generatePage(description);
+    generatePage(description, model.stowedID);
     // Begin generating a new description
     getDescription(model).then((description) => {
       console.log(description);
+      model.stowedID = randoID();
+      $("refresh").innerText = `Recommended substitute part: ${model.stowedID}`;
+      blink();
       model.hasDescriptionReady ||= description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
       if ($("root").className.includes("modalOn")) {
@@ -151,6 +157,7 @@ const renderPage = ({ id, vendor, description, package, picture, pinLabels, ther
   $("root").classList.remove("modalOn");
   $("pinout").clear();
   drawPinout($("pinout"), picture, pinLabels, thermalPadLabels);
+  $("refresh").innerText = "Look for substitute parts";
 
   // Create bounce effect
   $("banner").classList.remove("bounceIn");
@@ -185,6 +192,18 @@ const makePageFromPermalink = () => {
   renderPage({ id, vendor, description, package, picture, pinLabels, thermalPadLabels });
 };
 
+// A silly blink-alert that hopefully won't hurt my eyes (or anyone's)
+const blink = () => {
+  $("refresh").classList.remove("transition");
+  $("refresh").classList.add("blink");
+  window.setTimeout(() => {
+    $("refresh").classList.add("transition");
+  }, 20);
+  window.setTimeout(() => {
+    $("refresh").classList.remove("blink");
+  }, 2000);
+};
+
 // When the "Replacement part" button is clicked, look for an existing stowed description
 // If no stowed description is found, turn on modal and wait for one to become available
 // Otherwise, display the stowed description and generate a fresh one to stow
@@ -197,12 +216,17 @@ const clickRefresh = async (model) => {
     await new Promise((x) => setTimeout(x, 500));
 
     let description = model.hasDescriptionReady;
+    let id = model.stowedID;
     model.hasDescriptionReady = false;
-    generatePage(description);
+    model.stowedID = false;
+    generatePage(description, id);
     // Begin generating a new description
     getDescription(model).then((description) => {
       console.log(description);
-      model.hasDescriptionReady = model.hasDescriptionReady || description;
+      model.stowedID = randoID();
+      $("refresh").innerText = `Recommended substitute part: ${model.stowedID}`;
+      blink();
+      model.hasDescriptionReady ||= description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
       if ($("root").className.includes("modalOn")) {
         chipModelLoaded("", model);

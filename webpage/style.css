@@ -12,6 +12,10 @@ body {
   background-color: #edf6f9;
 }
 
+h1 {
+  padding-bottom: 1rem;
+}
+
 .svg * {
   font-family: monospace;
 }
@@ -108,9 +112,9 @@ header {
   display: none;
 }
 
-#chipStats {
+#content {
   margin: auto;
-  max-width: 800px;
+  max-width: 1000px;
 }
 
 .figures {
@@ -119,7 +123,7 @@ header {
   flex-flow: row wrap;
   justify-content: space-between;
   align-items: center;
-  width: 80%;
+  width: 100%;
   border: 1px solid #222;
   background-color: white;
 }
@@ -181,4 +185,22 @@ svg {
   color: blue;
   text-decoration: underline;
   cursor: pointer;
+}
+
+#chipsets {
+  background-color: red;
+}
+.blink {
+  filter: drop-shadow(4px 4px 10px rgb(207, 207, 38)) drop-shadow(-4px 4px 10px rgb(207, 207, 38)) drop-shadow(4px -4px 10px rgb(207, 207, 38))
+    drop-shadow(-4px -4px 10px rgb(207, 207, 38));
+}
+.transition {
+  /*  filter: drop-shadow(4px 4px 4px rgba(207, 207, 38, 0)) drop-shadow(-4px 4px 4px rgba(207, 207, 38, 0)) drop-shadow(4px -4px 4px rgba(207, 207, 38, 0))
+    drop-shadow(-4px -4px 4px rgba(207, 207, 38, 0));*/
+  filter: none;
+  transition: filter 1s ease-in-out;
+}
+
+.overline {
+  text-decoration: overline;
 }
