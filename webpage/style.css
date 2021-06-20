@@ -5,11 +5,11 @@
 * {
   margin: 0;
   box-sizing: border-box;
-  font-family: "Open Sans", sans-serif;
 }
 
 body {
   background-color: #edf6f9;
+  font-family: "Open Sans", sans-serif;
 }
 
 h1 {
@@ -36,7 +36,6 @@ header {
   padding: 1rem;
   font-size: 2em;
   vertical-align: middle;
-
   overflow: hidden;
 }
 
@@ -115,6 +114,7 @@ header {
 #content {
   margin: auto;
   max-width: 1000px;
+  padding: 2em;
 }
 
 .figures {
@@ -141,10 +141,6 @@ svg {
   background-color: white;
 }
 
-#content {
-  padding: 2em;
-}
-
 #banner {
   width: 80%;
   max-width: 30em;
@@ -158,19 +154,13 @@ svg {
   font-family: "Capriola";
   box-shadow: #32325daa 0px 13px 27px -5px, #000000aa 0px 8px 16px -8px;
 }
-.bounceIn {
-  position: relative;
-  left: -100vw;
-  transition: transform 1s cubic-bezier(0.47, 2.33, 0.15, 0.24);
-  transform: translateX(100vw);
-}
 
 #leadTime {
   text-align: center;
   margin-bottom: 4rem;
 }
 #longWait {
-  color: red;
+  color: #cc1d1d;
   font-weight: bold;
 }
 
@@ -190,17 +180,101 @@ svg {
 #chipsets {
   background-color: red;
 }
-.blink {
-  filter: drop-shadow(4px 4px 10px rgb(207, 207, 38)) drop-shadow(-4px 4px 10px rgb(207, 207, 38)) drop-shadow(4px -4px 10px rgb(207, 207, 38))
-    drop-shadow(-4px -4px 10px rgb(207, 207, 38));
-}
-.transition {
-  /*  filter: drop-shadow(4px 4px 4px rgba(207, 207, 38, 0)) drop-shadow(-4px 4px 4px rgba(207, 207, 38, 0)) drop-shadow(4px -4px 4px rgba(207, 207, 38, 0))
-    drop-shadow(-4px -4px 4px rgba(207, 207, 38, 0));*/
-  filter: none;
-  transition: filter 1s ease-in-out;
-}
 
 .overline {
   text-decoration: overline;
+}
+.parallax {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  perspective: 1px;
+  perspective-origin: 50% 15%;
+  transform-style: preserve-3d;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.hero-parallax {
+  z-index: -1;
+  height: 20vh;
+  width: 110%;
+  background-image: linear-gradient(#22000066, #00000066), url("./unsplash/louis-reed-wSTCaQpiLtc-unsplash.jpg");
+  background-position: left 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-family: "Capriola", sans-serif;
+  font-size: 5vw;
+  color: white;
+  position: relative;
+}
+
+.content-parallax {
+  background-color: #edf6f9;
+  width: 100%;
+  position: relative;
+  display: block;
+  z-index: 1;
+}
+
+@media all and (min-width: 720px) {
+  .parallax {
+    perspective-origin: 50% 30%;
+  }
+  .hero-parallax {
+    height: 60vh;
+    font-size: min(6vw, 4rem);
+  }
+  .hero {
+    top: -60vh;
+    margin-bottom: -60vh;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .blink {
+    filter: drop-shadow(4px 4px 10px rgb(207, 207, 38)) drop-shadow(-4px 4px 10px rgb(207, 207, 38)) drop-shadow(4px -4px 10px rgb(207, 207, 38))
+      drop-shadow(-4px -4px 10px rgb(207, 207, 38));
+  }
+  .transition {
+    filter: none;
+    transition: filter 1s ease-in-out;
+  }
+  .bounceIn {
+    position: relative;
+    left: -100vw;
+    transition: transform 1s cubic-bezier(0.47, 2.33, 0.15, 0.24);
+    transform: translateX(100vw);
+  }
+  .hero-parallax {
+    transform: translateZ(-1px) scale(2);
+  }
+}
+
+.persptest {
+  padding-bottom: 200em;
+}
+
+a.logoLink {
+  text-decoration: inherit;
+  color: inherit;
+}
+#vendorList {
+  line-height: 2em;
+}
+
+#vendor-splash {
+  position: fixed;
+  z-index: -1;
+  right: 10%;
+  top: 400px;
+  width: 40vw;
+  max-width: 500px;
 }

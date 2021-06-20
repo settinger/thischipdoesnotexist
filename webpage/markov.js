@@ -19,8 +19,9 @@ const useMarkov = (model, maxLength = 60) => {
     // This should never happen, but if the transitions table for this n-graph is empty, pick a random result from a random transition table
     if (Object.keys(model.transitions[ngraph]).length < 1) {
       newValue = sampleFromDict(sample(Object.values(model.transitions)));
+    } else {
+      newValue = sampleFromDict(model.transitions[ngraph]);
     }
-    newValue = sampleFromDict(model.transitions[ngraph]);
     if (newValue == "\n") break;
     result += newValue;
   }
