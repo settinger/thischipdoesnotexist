@@ -48,7 +48,7 @@ header {
   padding: 2.1em 1em;
   vertical-align: middle;
 }
-#fakenav div:hover {
+#fakenav > div:hover {
   background-color: #ffffff44;
 }
 
@@ -199,7 +199,7 @@ svg {
 
 .hero-parallax {
   z-index: -1;
-  height: 20vh;
+  height: 30vh;
   width: 110%;
   background-image: linear-gradient(#22000066, #00000066), url("./unsplash/louis-reed-wSTCaQpiLtc-unsplash.jpg");
   background-position: left 50%;
@@ -258,10 +258,6 @@ svg {
   }
 }
 
-.persptest {
-  padding-bottom: 200em;
-}
-
 a.logoLink {
   text-decoration: inherit;
   color: inherit;
@@ -277,4 +273,96 @@ a.logoLink {
   top: 400px;
   width: 40vw;
   max-width: 500px;
+}
+
+div#popoverCart {
+  position: absolute;
+  padding: 0px;
+  background-color: #ffddd2;
+  color: black;
+  width: 100px;
+  right: 10px;
+  border-style: solid;
+  border-width: 20px 10px 10px 10px;
+  border-image: url(cart.svg) 20 10 10 10 stretch stretch;
+  background-clip: content-box;
+  /*  display: none;*/
+  transform-origin: center top;
+  transform: scaleY(0);
+  transition: transform 0.3s linear;
+}
+
+.smokescreen {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0%;
+  transition: opacity 0.5s ease-out;
+  z-index: 99;
+}
+
+.modalMessage {
+  pointer-events: none;
+  opacity: 100%;
+  text-align: center;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;
+  min-width: 360px;
+  max-width: 50em;
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 2em;
+  border-radius: 2em;
+  opacity: 0;
+  transition: opacity 0.5s linear, top 1s ease-out;
+  z-index: 100;
+}
+
+.spiel {
+  margin: 6em 0;
+}
+.spiel p {
+  padding-bottom: 2em;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.oneChip {
+  width: 30%;
+  min-width: 300px;
+  margin-bottom: 2em;
+  padding: 1em;
+  text-align: center;
+  border: 1px solid #222;
+  background-color: white;
+}
+
+.galleryImage {
+  width: 100%;
+  aspect-ratio: 1/1;
+  padding: 1em;
+  object-fit: cover;
+}
+
+.gallery a {
+  text-decoration: none;
+  color: black;
 }

@@ -67,7 +67,7 @@ const getEP = (package) => {
   // Package classes that MUST have thermal pads: aQFN, DFN except 8 and 10, DRQFN, MLPQ, PQFN, QFN, SIP-9, SIP-15, LFCSP-8.
   if (
     ["aQFN", "DRQFN", "MLPQ", "PQFN", "QFN"].includes(packageClass) ||
-    (packageClass == "DFN" && numPins > 10) ||
+    (packageClass == "DFN" && ![8, 10].includes(numPins)) ||
     (packageClass == "SIP" && numPins >= 9) ||
     package == "LFCSP-8"
   ) {
@@ -101,10 +101,12 @@ const makePins = (package) => {
     pinBlock = String(pin - (pin % 8) + 8);
     let label = sampleFromDict(pinsInBlocks[pinBlock]);
     // Some labels have waaaay too many functions, so pick at most two
-    if (label.split("/").length > 2) {
-      let newLabel = [sample(label.split("/")), sample(label.split("/"))];
-      label = newLabel.join("/");
+    let labelArray = label.split("/");
+    while (labelArray.length > 2) {
+      let n = Math.floor(Math.random() * labelArray.length);
+      labelArray = [...labelArray.slice(0, n - 1), ...labelArray.slice(n)];
     }
+    label = labelArray.join("/");
     pinLabels.push(label);
   }
   // If none of the pins are labelled GND/Vss/VSS, name one GND

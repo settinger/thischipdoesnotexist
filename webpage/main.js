@@ -78,29 +78,7 @@ const generatePage = (description, stowedID) => {
   // Identify which .webp file to use as the package render
   let picture = getPicture(package);
 
-  // Assign labels to each chip pin
-  let pinLabels = [];
-  let thermalPadLabels = [];
-  for (let pin = 0; pin < numPins; pin++) {
-    // Identify which block of pins labels to sample from
-    pinBlock = String(pin - (pin % 8) + 8);
-    let label = sampleFromDict(pinsInBlocks[pinBlock]);
-    // Some labels have waaaay too many functions, so pick at most two
-    if (label.split("/").length > 2) {
-      let newLabel = [sample(label.split("/")), sample(label.split("/"))];
-      label = newLabel.join("/");
-    }
-    pinLabels.push(label);
-  }
-  // If none of the pins are labelled GND/Vss/VSS, name one GND
-  if (!pinLabels.includesAny("GND", "Vss", "VSS")) {
-    let GNDpin = Math.floor(Math.random() * pinLabels.length);
-    pinLabels[GNDpin] = "GND";
-  }
-  // Give the thermal pins random labels from existing pins
-  for (let i = 0; i < thermalPads; i++) {
-    thermalPadLabels.push(sample(pinLabels));
-  }
+  let [pinLabels, thermalPadLabels] = makePins(package);
 
   renderPage({ id, vendor, description, package, picture, pinLabels, thermalPadLabels });
 };
@@ -179,7 +157,7 @@ const renderPage = ({ id, vendor, description, package, picture, pinLabels, ther
 // Intialize page by looking for a URL parameter
 // If certain properties exist, pre-assign those properties to the display
 // Only create new random values if one can't be gotten from the permalink
-const makePageFromPermalink = () => {
+const makePageFromPermalink = async () => {
   let url = new URLSearchParams(window.location.search);
   if (!url.get("ic")) {
     throw "No LZString to parse";
@@ -189,6 +167,8 @@ const makePageFromPermalink = () => {
   let pinLabels = pinMap.map(decodePinMap);
   let thermalPadLabels = thermMap.map((n) => pinLabels[n] ?? "NC");
   let picture = getPicture(package);
+  // Delay so it feels like a new page is actually loading
+  await new Promise((x) => setTimeout(x, 500));
   renderPage({ id, vendor, description, package, picture, pinLabels, thermalPadLabels });
 };
 
@@ -238,9 +218,9 @@ const clickRefresh = async (model) => {
   }
 };
 
-const init = () => {
+const init = async () => {
   try {
-    makePageFromPermalink();
+    await makePageFromPermalink();
   } catch (error) {
     console.log(error);
   }
