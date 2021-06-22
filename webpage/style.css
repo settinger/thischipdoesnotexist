@@ -1,7 +1,7 @@
-/* Google Fonts: Open Sans for body text, Oswald for chip ID/description, Capriola for logo */
-@import url("https://fonts.googleapis.com/css2?family=Capriola&family=Open+Sans&family=Oswald:wght@700&display=swap");
-
+/* Google Fonts: Open Sans for body text, Capriola for logo */
+@import url("https://fonts.googleapis.com/css2?family=Capriola&family=Open+Sans&display=swap");
 /* color scheme reference: https://coolors.co/006d77-83c5be-edf6f9-ffddd2-e29578 */
+
 * {
   margin: 0;
   box-sizing: border-box;
@@ -39,16 +39,16 @@ header {
   overflow: hidden;
 }
 
-#fakenav {
+#fake-nav {
   display: flex;
   justify-content: space-around;
   margin: auto 0 auto auto;
 }
-#fakenav div {
+#fake-nav > div {
   padding: 2.1em 1em;
   vertical-align: middle;
 }
-#fakenav > div:hover {
+#fake-nav > div:hover:not(.smokescreen) {
   background-color: #ffffff44;
 }
 
@@ -79,17 +79,15 @@ header {
   border: 3px solid rgba(0, 0, 255, 0.3);
   border-radius: 50%;
   border-top-color: rgba(0, 0, 255, 0.9);
-  animation: spin 1s ease-in-out infinite;
 }
-
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-.modalOn #modalFilter {
-  position: absolute;
+.modal-on #modal-filter {
+  position: fixed;
   top: 0;
   left: 0;
   overflow: hidden;
@@ -100,14 +98,14 @@ header {
   opacity: 50%;
 }
 
-:not(.modalOn) > #modalFilter {
+:not(.modal-on) > #modal-filter {
   display: none;
 }
-:not(.modalOn) > #modal {
+:not(.modal-on) > #modal {
   display: none;
 }
 
-.modalOn #content {
+.modal-on #content {
   display: none;
 }
 
@@ -155,26 +153,39 @@ svg {
   box-shadow: #32325daa 0px 13px 27px -5px, #000000aa 0px 8px 16px -8px;
 }
 
-#leadTime {
+#lead-time {
   text-align: center;
   margin-bottom: 4rem;
 }
-#longWait {
+#long-wait {
   color: #cc1d1d;
   font-weight: bold;
 }
+#pricing {
+  padding: 2rem 0;
+}
+#price-table {
+  margin: auto;
+  border-collapse: collapse;
+}
+#price-table th {
+  padding: 0.1em 0.5em;
+  border: 1px solid grey;
+}
+#price-table td {
+  text-align: right;
+  padding: 0.1em 0.5em;
+  border: 1px solid grey;
+}
+*[title] {
+  border-bottom: 1px dotted;
+  cursor: help !important;
+}
 
-#lowerLinks {
-  padding-top: 2em;
+#lower-links {
   display: flex;
   flex-flow: row wrap;
   justify-content: space-between;
-}
-
-.fakeLink {
-  color: blue;
-  text-decoration: underline;
-  cursor: pointer;
 }
 
 #chipsets {
@@ -224,50 +235,8 @@ svg {
   z-index: 1;
 }
 
-@media all and (min-width: 720px) {
-  .parallax {
-    perspective-origin: 50% 30%;
-  }
-  .hero-parallax {
-    height: 60vh;
-    font-size: min(6vw, 4rem);
-  }
-  .hero {
-    top: -60vh;
-    margin-bottom: -60vh;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .blink {
-    filter: drop-shadow(4px 4px 10px rgb(207, 207, 38)) drop-shadow(-4px 4px 10px rgb(207, 207, 38)) drop-shadow(4px -4px 10px rgb(207, 207, 38))
-      drop-shadow(-4px -4px 10px rgb(207, 207, 38));
-  }
-  .transition {
-    filter: none;
-    transition: filter 1s ease-in-out;
-  }
-  .bounceIn {
-    position: relative;
-    left: -100vw;
-    transition: transform 1s cubic-bezier(0.47, 2.33, 0.15, 0.24);
-    transform: translateX(100vw);
-  }
-  .hero-parallax {
-    transform: translateZ(-1px) scale(2);
-  }
-}
-
-a.logoLink {
-  text-decoration: inherit;
-  color: inherit;
-}
-#vendorList {
-  line-height: 2em;
-}
-
 #vendor-splash {
-  position: fixed;
+  position: absolute;
   z-index: -1;
   right: 10%;
   top: 400px;
@@ -275,7 +244,15 @@ a.logoLink {
   max-width: 500px;
 }
 
-div#popoverCart {
+a.logo-link {
+  text-decoration: inherit;
+  color: inherit;
+}
+#vendor-list {
+  line-height: 2em;
+}
+
+div#popover-cart {
   position: absolute;
   padding: 0px;
   background-color: #ffddd2;
@@ -286,49 +263,53 @@ div#popoverCart {
   border-width: 20px 10px 10px 10px;
   border-image: url(cart.svg) 20 10 10 10 stretch stretch;
   background-clip: content-box;
-  /*  display: none;*/
   transform-origin: center top;
   transform: scaleY(0);
-  transition: transform 0.3s linear;
 }
 
 .smokescreen {
   pointer-events: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   overflow: hidden;
-  z-index: 1;
+  z-index: -9;
   width: 100%;
   height: 100%;
   background-color: black;
   opacity: 0%;
-  transition: opacity 0.5s ease-out;
-  z-index: 99;
 }
 
-.modalMessage {
+.modal-message {
+  opacity: 0%;
   pointer-events: none;
-  opacity: 100%;
-  text-align: center;
-  position: absolute;
+  position: fixed;
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 40%;
-  min-width: 360px;
+  width: 80%;
+  min-width: 400px;
   max-width: 50em;
   background-color: white;
   color: black;
   display: flex;
-  align-items: center;
+  align-items: left;
   flex-direction: column;
   justify-content: center;
-  padding: 0 2em;
+  padding: 2em;
   border-radius: 2em;
   opacity: 0;
-  transition: opacity 0.5s linear, top 1s ease-out;
-  z-index: 100;
+  z-index: -10;
+}
+
+.modal-message p,
+.modal-message ul {
+  font-size: 0.9em;
+  line-height: 1.3rem;
+  margin-bottom: 1rem;
+}
+.modal-message p:last-child {
+  margin-bottom: 0;
 }
 
 .spiel {
@@ -345,7 +326,7 @@ div#popoverCart {
   justify-content: space-around;
 }
 
-.oneChip {
+.one-chip {
   width: 30%;
   min-width: 300px;
   margin-bottom: 2em;
@@ -355,14 +336,72 @@ div#popoverCart {
   background-color: white;
 }
 
-.galleryImage {
+.gallery-image {
   width: 100%;
   aspect-ratio: 1/1;
   padding: 1em;
   object-fit: cover;
 }
 
+a,
+.fake-link {
+  text-decoration: none;
+  cursor: pointer;
+  color: #0088cc;
+}
+
 .gallery a {
   text-decoration: none;
   color: black;
+}
+
+/* Differences between mobile and desktop */
+@media all and (min-width: 720px) {
+  .parallax {
+    perspective-origin: 50% 30%;
+  }
+  .hero-parallax {
+    height: 60vh;
+    font-size: min(6vw, 4rem);
+  }
+  .hero {
+    top: -60vh;
+    margin-bottom: -60vh;
+  }
+}
+
+/* The animated transitions and such */
+@media (prefers-reduced-motion: no-preference) {
+  #loading {
+    animation: spin 1s ease-in-out infinite;
+  }
+  .blink {
+    filter: drop-shadow(4px 4px 10px rgb(207, 207, 38)) drop-shadow(-4px 4px 10px rgb(207, 207, 38)) drop-shadow(4px -4px 10px rgb(207, 207, 38))
+      drop-shadow(-4px -4px 10px rgb(207, 207, 38));
+  }
+  .transition {
+    filter: none;
+    transition: filter 1s ease-in-out;
+  }
+  .bounce-in {
+    position: relative;
+    left: -100vw;
+    transition: transform 1s cubic-bezier(0.47, 2.33, 0.15, 0.24);
+    transform: translateX(100vw);
+  }
+  #vendor-splash {
+    position: fixed;
+  }
+  .hero-parallax {
+    transform: translateZ(-1px) scale(2);
+  }
+  div#popover-cart {
+    transition: transform 0.3s linear;
+  }
+  .smokescreen {
+    transition: opacity 0.5s ease-out;
+  }
+  .modal-message {
+    transition: opacity 0.5s linear, top 1s ease-out;
+  }
 }

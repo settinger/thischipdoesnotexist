@@ -9,12 +9,12 @@
     <title>This Chip is Out of Stock</title>
   </head>
   <body>
-    <div id="root" class="modalOn">
+    <div id="root" class="modal-on">
       <div id="modal">
         <h1>Checking part availability...</h1>
         <div id="loading"></div>
       </div>
-      <div id="modalFilter"></div>
+      <div id="modal-filter"></div>
       <main id="content">
         <h1 id="chipID"></h1>
         <h2 id="description"></h2>
@@ -59,7 +59,7 @@
 
         // Publish the part specs
         const $root = document.getElementById("root");
-        $root.classList.remove("modalOn");
+        $root.classList.remove("modal-on");
         const $content = document.createElement("div");
         $content.id = package;
         $content.innerHTML = `<h2>${package}</h2>`;
@@ -105,7 +105,7 @@
         }
 
         // Publish part specs
-        $("root").classList.remove("modalOn");
+        $("root").classList.remove("modal-on");
         const $content = document.createElement("div");
         $content.id = package;
         $content.innerHTML = `<h2>${package}</h2>`;

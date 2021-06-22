@@ -88,15 +88,15 @@ const generatePage = (description, stowedID) => {
 // Else, generate and render a new description AND store one
 const chipModelLoaded = async (error, model) => {
   $("refresh").onclick ??= (_) => clickRefresh(model);
-  if (!$("root").className.includes("modalOn")) {
+  if (!$("root").className.includes("modal-on")) {
     getDescription(model).then((description) => {
       console.log(description);
       model.stowedID = randoID();
-      $("refresh").innerText = `Recommended substitute part: ${model.stowedID}`;
+      $("refresh").innerText = `You may be interested in: ${model.stowedID}`;
       blink();
       model.hasDescriptionReady ||= description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
-      if ($("root").className.includes("modalOn")) {
+      if ($("root").className.includes("modal-on")) {
         chipModelLoaded("", model);
       }
     });
@@ -104,17 +104,17 @@ const chipModelLoaded = async (error, model) => {
     let description = await getDescription(model);
     model.hasDescriptionReady = false;
     console.log(description);
-    $("root").classList.remove("modalOn");
+    $("root").classList.remove("modal-on");
     generatePage(description, model.stowedID);
     // Begin generating a new description
     getDescription(model).then((description) => {
       console.log(description);
       model.stowedID = randoID();
-      $("refresh").innerText = `Recommended substitute part: ${model.stowedID}`;
+      $("refresh").innerText = `You may be interested in: ${model.stowedID}`;
       blink();
       model.hasDescriptionReady ||= description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
-      if ($("root").className.includes("modalOn")) {
+      if ($("root").className.includes("modal-on")) {
         chipModelLoaded("", model);
       }
     });
@@ -132,20 +132,50 @@ const renderPage = ({ id, vendor, description, package, picture, pinLabels, ther
   if (package.startsWith("aQFN")) {
     $("render").appendHTML("figcaption", { text: 'Apparently "aQFN" is a registered trademark of Nordic Semiconductor.' });
   }
-  $("root").classList.remove("modalOn");
+  $("root").classList.remove("modal-on");
   $("pinout").clear();
   drawPinout($("pinout"), picture, pinLabels, thermalPadLabels);
-  $("refresh").innerText = "Look for substitute parts";
+  $("refresh").innerText = "Look for similar parts";
 
   // Create bounce effect
-  $("banner").classList.remove("bounceIn");
-  $("banner").classList.add("bounceIn");
+  $("banner").classList.remove("bounce-in");
+  $("banner").classList.add("bounce-in");
   window.setTimeout(() => {
-    $("banner").classList.remove("bounceIn");
+    $("banner").classList.remove("bounce-in");
   }, 4000);
 
-  // Set the estimated lead time (there's no way to permalink a lead time, too lazy to add it to the LZString)
-  $("longWait").innerText = (Math.random() * 80 + 50).toFixed(Math.floor(Math.random() * 3)) + " weeks";
+  // For out-of-stock mode: set the estimated lead time (there's no way to permalink a lead time, too lazy to add it to the LZString)
+  if (!!$("long-wait")) {
+    $("long-wait").innerText = (Math.random() * 80 + 50).toFixed(Math.floor(Math.random() * 3)) + " weeks";
+  }
+
+  // For in-stock mode: set the bulk pricing table (again, too lazy to add it to the LZString)
+  if (!!$("price-table") && !!currencies) {
+    $("price-table").clear();
+    const priceHeader = $("price-table").appendHTML("thead", { innerHTML: "<th>Min Qty</th><th>Unit Price</th><th>Extended Cost</th>" });
+    // Choose a currency
+    let locale = sample(currencies);
+    let currency = new Intl.NumberFormat(locale.locale, {
+      style: "currency",
+      currency: locale.code,
+      numberingSystem: "latn",
+    });
+    let scaling = 10 ** locale.exchange;
+    // Random number of rows between 1 and 5
+    const numRows = Math.ceil(Math.random() * 4);
+    let qty = 1;
+    let unitPrice = (3 + Math.random() * 5) * scaling;
+    let extCost = qty * unitPrice;
+    for (let i = 0; i < numRows; i++) {
+      let innerHTML = `<td>${qty}</td><td><span title="${locale.text}">${currency.format(unitPrice)}</span></td><td><span title="${
+        locale.text
+      }">${currency.format(extCost)}</span></td>`;
+      const row = priceHeader.appendHTML("tr", { innerHTML });
+      qty = Math.round(qty * 10 ** (1 + Math.random()));
+      unitPrice *= 0.8 + 0.1 * Math.random();
+      extCost = qty * unitPrice;
+    }
+  }
 
   // Generate permalink from properties
   const pinMap = pinLabels.map(encodePinMap);
@@ -189,8 +219,8 @@ const blink = () => {
 // Otherwise, display the stowed description and generate a fresh one to stow
 // Before displaying the stowed one, show the loading page for a fraction of a second, for """authenticity"""
 const clickRefresh = async (model) => {
-  $("root").classList.add("modalOn");
-  $("banner").classList.remove("bounceIn");
+  $("root").classList.add("modal-on");
+  $("banner").classList.remove("bounce-in");
   if (!!model.hasDescriptionReady) {
     // Delay so it feels like a new page is actually loading
     await new Promise((x) => setTimeout(x, 500));
@@ -204,16 +234,16 @@ const clickRefresh = async (model) => {
     getDescription(model).then((description) => {
       console.log(description);
       model.stowedID = randoID();
-      $("refresh").innerText = `Recommended substitute part: ${model.stowedID}`;
+      $("refresh").innerText = `You may be interested in: ${model.stowedID}`;
       blink();
       model.hasDescriptionReady ||= description;
       // What if *this* description is already in demand by the time it becomes ready? Recurse!
-      if ($("root").className.includes("modalOn")) {
+      if ($("root").className.includes("modal-on")) {
         chipModelLoaded("", model);
       }
     });
   } else {
-    $("root").className = "modalOn";
+    $("root").className = "modal-on";
     // Assume a new description is forthcoming
   }
 };

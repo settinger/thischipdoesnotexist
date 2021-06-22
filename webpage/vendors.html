@@ -10,8 +10,8 @@
   </head>
   <body>
     <header>
-      <a href="./" class="logoLink"><div id="logo">jellybean&nbsp;parts</div></a>
-      <div id="fakenav">
+      <a href="./" class="logo-link"><div id="logo">jellybean&nbsp;parts</div></a>
+      <div id="fake-nav">
         <div id="navAbout">About</div>
         <div id="navContact">Contact</div>
         <div id="navCart">Shopping Cart</div>
@@ -26,7 +26,7 @@
       <main id="content">
         <h1>Our marketplace</h1>
         <p>We offer parts made by many major manufacturers, including:</p>
-        <ul id="vendorList"></ul>
+        <ul id="vendor-list"></ul>
         <p>...and lots more!</p>
       </main>
     </div>
@@ -38,7 +38,7 @@
       let img = $("vendor-splash");
       const moreNames = (n = 25) => {
         for (let i = 0; i < n; i++) {
-          $("vendorList").appendHTML("li", { text: useMarkov(markov) });
+          $("vendor-list").appendHTML("li", { text: useMarkov(markov) });
         }
       };
       moreNames(50);
@@ -47,7 +47,7 @@
         img.style.top = window.innerHeight - img.height / 2 + "px";
         window.addEventListener("scroll", (e) => {
           img.style.top = window.innerHeight - img.height / 2 - 0.5 * Math.sqrt(window.scrollY ?? 0) + "px";
-          if ($("vendorList").clientHeight - window.innerHeight - 200 < window.scrollY) {
+          if ($("vendor-list").clientHeight - window.innerHeight - 200 < window.scrollY) {
             moreNames();
           }
         });
