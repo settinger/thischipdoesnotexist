@@ -1,0 +1,106 @@
+M, 50V, Vin-70V Audio Power Amplifier
+MHz Bridge Regulator, Adjustable Output Voltage
+MOS Charsing Single-Channel Digital Posterfate (Li+), 100 No directional Clock Differenceiver, integrated FET Input Optocoupler
+MHz Switch, Vorial IO, power Datalle
+ON.0V to 24V In-T7mA Companital Applockur
+OSART Cron-cootrational Amplifier
+OSTRT Low Noise Amplifier
+ONA to 5V Pheremit Synchronous Step Down Converter
+3.3V Bidirectional Vitcupler
+3.0V 1500kHz Power Micropower Synchronous Step-Up Converter
+3.5V 30W Precision Micropower Shunt Voltage Reference
+3.3V 500mA Precision Voltage Reference
+6uV DAC with ESD Promection
+6V I2C Input 150mA Synchronous Step-Down Voltage Regulator, Adjustable Output Voltage, 4.5-18V Input Voltage, 900kHz
+65V 0.5% Precision Micropower Shunt Voltage Reference
+65V 0.5% Precision Micropower Shunt Voltage Reference
+DSTPSwitch-Ch Open Drain Output
+DIO Step-Down Converter, 1.2V Input Voltage, Adjustable Output Voltage
+DC Opontroller, 100kHz, Mickont, 4.5V < 5.5V
+DC Optoction, Vde 70V, CTR 100-300%
+5.4V 50-400mA/15V input 9.5V Precision Single-Phase Bridge Rectifier, 500V Vrms, 1.5A If
+50V 00V VDC Isolated DC/DC Converter Module, Dual Output Voltage ±24V, ±42mA, 48V Input Voltage
+56V 0.0V 100kHz SMPS Controller, AC-DC
+56V 0.05V Precision Micropower Shunt Voltage Reference
+Optor ACjusation, 4.5-5V High-Output
+OSARTOs, Voltage-Reference
+ONA to 5V Pereramed and DC/DC Converter Module, Dual Output Voltage ±5V, ±200mA, 5V Input Voltage
+OSRA Converter with Sleed Monestant Priticion, Clars Differential input, 150kV ster-control
+D15A Ultra-Low Offset Voltage, Rail-to-Rail Operational Amplifier
+DTranncer, 400V VPS, 60W Dual CMOS Regulator
+DC Optoctors, Fixed Output Current 2.0A/4.0A, 80V, Half Bridge, Low Side Output
+DSAC-DC Converter, 1.5V Output Voltage, 0.9-5.5V Input Voltage
+MSPSW Driver IC, 300kHz, 290V, 1.0/4.0A
+MHz Switch, Vorial FET power Intrycaut Caragity
+MHz Switch, Vorial Input Comparator
+MHz Switch, Vorial IO, power Datalle
+D& 3.3V Voltage Flead Regulator, Vin 60V, IMoS Adjustable output voltage
+DSA, 20V to 25V input, Single Supply Curcent-Mode Controller, Synchronis Dusicatont
+D/5V to 5V 200mA DC-DC Converter with 1kV isolation, DC-package
+DSAutor, 1.2 - 3.6V APort, Adjustable Output Voltage
+100MHz, Operational Amplifier
+1 bit Digital thermostat and Thmostor for Isolated
+100V High Efficiency Step-Down DC-DC Converter, 12V fixed output voltage, Vin 76V
+100V High Efficiency Step-Down DC-DC Converter, adjustable output voltage, 2.5-6V input voltage
+DUSART DC/DC converter, Vingut Reference and Oscillator
+DSMPSw Noise, Low Distortion, Unity-Gain Stable ADC, 20MHz
+D5V 250V Precision Micropower Shunt Voltage Reference
+DSAutor, 1.2 - 3.6V APort, Adjustable Output Voltage
+52V KSPI Output, High Voltage Synchronous Step-Down DC-DC Converter, 600kHz
+56V I2C Serial EEPROM, 128 Bits
+56V 0.0V 100kV Precision Fixed Frequency Silicon Oscillator
+500mA Step-Down DC/DC-Regulator, 15-28V input, 12V fixed Output Voltage, LM78xx replacement, -40°C to +85°C
+Suptor Operation, Active Shutd Optocoupler
+Sching DAS with I2C interface
+Swith Low Power, Low Distortion, Voltage Feedback Amplifier
+Swith MOSFET Input/Bipolar Output
+LOp Voltage Monitor with Ilout Brodes 240ks
+LDS Driver, Half-Bupkex RS24/15 Strpes StD Low Noise (Li+ Ul Bittr
+LOS Decoront Accuiver for Shutd Integrated LED Isolation (and Serial Interface
+LONA Step-Down DC/DC-Regulator, 15-42V input, 12V fixed Output Voltage, LM78xx replacement, -40°C to +85°C
+I6.3V, ±15kV Precision Difference Smand Monolathic Cynchrons
+I 5.0V Optocoupler, Vce 70V, CTR 100-300%
+In to 10V input, 10 strese-Levelsing 5 0 Digital Supply CMOS or Axp statd 10 bit, SPDA
+In to 10V 3.3mA Comparator
+U2V Isolated DC/DC Converter Module, Dual Output Voltage ±5V, ±200mA, 5V Input Voltage
+USRA, 2.0V to 5V 200mA DC-DC Converter with 1kV isolation, DC-package
+USRA, USB Typeral Processor, 30MHz 250MHz
+USRA, USB Typetal Potentiometer, 256 steps
+300MHz +15.1dB Low Noise Amplifier
+330V High Efficiency Synchronous Step Up Converters with 55V output, 3-0.5 copumpur
+3.3V 500mA/1.5V 250mA Dual Low Drop-out Regulator with Voltage Supervisor
+3.3V 500mA Precision Voltage Reference
+LEDS mutrety Class D CDC LoD Control
+L6V Input Current Shunt Monitor, 20V/V gain, bandwidth 450kHz, Vcc=5V
+LONA Step-Down DC/DC-Regulator, 15-42V input, 12V fixed Output Voltage, LM78xx replacement, -40°C to +85°C
+LON SPI, 2.0V CAN Driver and Digital Sheple Droverit Synthronisut Reficting (enitili-isoortable Multifictive
+3 Vor Digital Preamplifier Controller IC
+36V Single-Supply, Low-Power, Tri-Filiter, Linalor Operational Amplifier
+3.3V 1000kHz Precision Difference Amplifier, 7V/V x 2V/V adjustable gain, bandwidth 80kHz, Vcc=5V, unidirectional
+3.3V 5V Precision Micropower Shunt Voltage Reference
+5.0V 100W DC-DC Converter, 12V Input Voltage, Adjustable Output Voltage
+56V 100W DC-DC Converter with 1kV isolation, DC-package
+50V 00V Voltage Reference
+56V 0.0V 100mA DC-DC Converter with 1kV isolation, DC-package
+3+7MHz With Unity Gain Driver
+3V 3.3V eriver, 16V input, 10mA fixed 5V Output Voltage
+3.3V 1000V PWM Controller 1.5MHz
+3.3V 1000MHz +15.1dB Low Noise Amplifier
+RA8-5W Programmable Voltage Regulator
+R1-MHz to 26V BLo mack bus friemper
+R8V Low Noise Operational Amplifier
+RAMHz GePEC CMOS to multery
+SMBS DTBr/Low Noise Amplifier
+S400V 0.0V Precision Micropower Shunt Voltage Reference
+SMHz Step-Down DC/DC-Converter, 12V fixed output voltage
+Swith Low Power, Low Distortion, Voltage Feedback Amplifier
+LPIFG, 24V Do 160kHz SMPS CAN, ADC
+LOT Low Noise Operational Amplifier
+LV Digital Audio Amplifier, PWM Modulator, ±100V, 1.0/1.2A
+LONA Step-Down DC/DC-Regulator, 15-32V input, 12V fixed Output Voltage, LM78xx replacement, -40°C to +85°C
+DSPDT HV DC/DC converter, 12 bit, 3-Chatn Mele
+D Cont Driver With 3-State Output, active-low enables, inverting outputs
+DSA DC-DC Converter with 1kV isolation, DC-package
+DSART DC/DC converter, 12V input, 15V output
+30V High Speed CMOS Compatible Optocoupler, dV/dt 5000/us, VCM 50, max 7V VCC
+3 Vout CMOS Buck Driver, 10-400mA

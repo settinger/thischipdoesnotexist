@@ -2,7 +2,9 @@
 
 ## June 2021
 
-I made a nifty little tool to help us all through the [ongoing chip shortage](https://en.wikipedia.org/wiki/2020%E2%80%932021_global_chip_shortage). This tool will tell you if a particular IC is out of stock or not. The only problem: it only knows about completely made-up chips that probably can't ever exist.
+I made a nifty little tool to help us all through the [ongoing chip shortage](https://en.wikipedia.org/wiki/2020%E2%80%932021_global_chip_shortage). This tool will look up a particular IC and assure you that, yes, it is in stock. The only problem: it only knows about completely made-up chips that don't exist.
+
+Up until the last minute, the site was going to constantly tell you all the chips are "Sorry, out of stock" and give you a depressingly long lead time. But I felt like we could all use a nice reminder of how it feels to look at a chip listing that *isn't* out of stock.
 
 If you spot a problem or have a suggestion for the page, please don't hesitate to contact me! You can reach me on Twitter or by email (ettingersam at gmail), or wherever else you can find me. I ran into some issues, particularly with the [SVG pinout diagrams](https://bugzilla.mozilla.org/show_bug.cgi?id=1716435), so I'd really appreciate if you spot any mistakes. Or if you just have regular feedback, that's welcome too!
 
