@@ -1,4 +1,4 @@
-# [Jellybean Parts](www.jellybean.parts)
+# [Jellybean Parts](https://jellybean.parts)
 
 ## June 2021
 
