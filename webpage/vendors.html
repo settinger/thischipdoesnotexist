@@ -30,29 +30,7 @@
         <p>...and lots more!</p>
       </main>
     </div>
-    <script src="./bodges.js" type="text/javascript"></script>
-    <script src="./nav.js" type="text/javascript"></script>
-    <script src="./longConstants.js" type="text/javascript"></script>
-    <script src="./markov.js" type="text/javascript"></script>
-    <script type="text/javascript">
-      let img = $("vendor-splash");
-      const moreNames = (n = 25) => {
-        for (let i = 0; i < n; i++) {
-          $("vendor-list").appendHTML("li", { text: useMarkov(markov) });
-        }
-      };
-      moreNames(50);
-      if (!window.matchMedia("(prefers-reduced-motion)")?.matches) {
-        // Set splash image to be halfway on screen and parallax verrrry slowly
-        img.style.top = window.innerHeight - img.height / 2 + "px";
-        window.addEventListener("scroll", (e) => {
-          img.style.top = window.innerHeight - img.height / 2 - 0.5 * Math.sqrt(window.scrollY ?? 0) + "px";
-          if ($("vendor-list").clientHeight - window.innerHeight - 200 < window.scrollY) {
-            moreNames();
-          }
-        });
-      }
-    </script>
+    <script src="./polyfilled.min.js" type="text/javascript" charset="UTF-8"></script>
   </body>
 </html>
 
